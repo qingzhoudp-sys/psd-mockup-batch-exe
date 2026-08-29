@@ -1,0 +1,19 @@
+PSD 样机智能对象批量替换 - 测试报告
+生成日期：2026-08-29
+
+已通过：
+1. Python 源码语法检查
+2. Photoshop JSX 自动化脚本生成自检
+3. Windows 构建工作流配置
+4. EXE 构建后 PE/MZ 文件头验证步骤
+5. EXE 打包后 --self-test 启动测试步骤
+6. 测试素材 PNG：1059 x 1061，RGBA
+7. 测试样机 PSD：1440 x 1440，RGB
+8. PSD 中精确找到 1 个名为“样机”的图层
+9. “样机”图层类型确认为 Smart Object
+
+尚未完成：
+1. Windows runner 构建（GitHub 连接无仓库写入权限，工作流无法提交）
+2. Photoshop 端到端替换与 JPG/PNG 导出（需要安装 Photoshop 的 Windows 环境）
+
+注意：在以上两项完成前，不应把程序标记为“已完成 Windows/Photoshop 实机测试”。
