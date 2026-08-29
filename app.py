@@ -14,15 +14,13 @@ APP_TITLE = "PSD 样机智能对象批量替换"
 TARGET_LAYER = "样机"
 
 
-def js_string(value):
-    return json.dumps(str(value), ensure_ascii=True)
-
-
 def build_js(settings):
     cfg = json.dumps(settings, ensure_ascii=True, separators=(",", ":"))
     return r'''#target photoshop
 (function () {
-    var CFG = JSON.parse(__CFG__);
+    // Photoshop 2020 ExtendScript may not expose the global JSON object.
+    // A JSON object literal is also valid JavaScript, so embed it directly.
+    var CFG = __CFG__;
     var oldDialogs = app.displayDialogs;
     app.displayDialogs = DialogModes.NO;
     var successes = 0, failures = [], exported = [];
@@ -105,7 +103,7 @@ def build_js(settings):
     function strip(n){return n.replace(/\.[^\.]+$/,'');}
     function safe(n){return n.replace(/[\\\/:*?"<>|]/g,'_');}
     function closeAllWithoutSaving(){while(app.documents.length){try{app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);}catch(e){break;}}}
-})();'''.replace("__CFG__", js_string(cfg))
+})();'''.replace("__CFG__", cfg)
 
 
 class App(tk.Tk):
@@ -241,6 +239,8 @@ def self_test():
     missing = [item for item in checks if item not in script]
     if missing:
         raise RuntimeError("自检失败，缺少：" + ", ".join(missing))
+    if "var CFG = JSON.parse" in script:
+        raise RuntimeError("自检失败：脚本仍依赖 Photoshop 2020 不支持的 JSON.parse")
     print("SELF_TEST_OK")
 
 
